@@ -1,3 +1,17 @@
+// ── THEME ─────────────────────────────────────────────────────
+const TOGGLE = document.getElementById('themeToggle');
+function applyTheme(dark) {
+  document.body.classList.toggle('dark', dark);
+  document.getElementById('iconMoon').style.display = dark ? 'none' : '';
+  document.getElementById('iconSun').style.display  = dark ? '' : 'none';
+}
+applyTheme(localStorage.getItem('theme') === 'dark');
+TOGGLE.addEventListener('click', () => {
+  const dark = !document.body.classList.contains('dark');
+  localStorage.setItem('theme', dark ? 'dark' : 'light');
+  applyTheme(dark);
+});
+
 const PLATFORM_NAMES = {
   "chatgpt.com":         "ChatGPT",
   "chat.openai.com":     "ChatGPT",
