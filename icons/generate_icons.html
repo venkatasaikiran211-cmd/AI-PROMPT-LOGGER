@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><title>Generate Icons</title></head>
+<body>
+<canvas id="c"></canvas>
+<script>
+const sizes = [16, 48, 128];
+
+function drawIcon(ctx, size) {
+  const s = size;
+  const r = s * 0.18;
+
+  const bg = ctx.createLinearGradient(0, 0, s, s);
+  bg.addColorStop(0, "#7c3aed");
+  bg.addColorStop(1, "#3b82f6");
+
+  ctx.beginPath();
+  ctx.moveTo(r, 0);
+  ctx.lineTo(s - r, 0);
+  ctx.quadraticCurveTo(s, 0, s, r);
+  ctx.lineTo(s, s - r);
+  ctx.quadraticCurveTo(s, s, s - r, s);
+  ctx.lineTo(r, s);
+  ctx.quadraticCurveTo(0, s, 0, s - r);
+  ctx.lineTo(0, r);
+  ctx.quadraticCurveTo(0, 0, r, 0);
+  ctx.closePath();
+  ctx.fillStyle = bg;
+  ctx.fill();
+
+  ctx.strokeStyle = "rgba(255,255,255,0.95)";
+  ctx.fillStyle = "rgba(255,255,255,0.95)";
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+
+  const p = s * 0.18;
+  const w = s - p * 2;
+  const h = s - p * 2;
+
+  if (size >= 48) {
+    const bx = p, by = p, bw = w * 0.82, bh = h * 0.65;
+    const br = s * 0.10;
+    ctx.lineWidth = s * 0.07;
+    ctx.beginPath();
+    ctx.moveTo(bx + br, by);
+    ctx.lineTo(bx + bw - br, by);
+    ctx.quadraticCurveTo(bx + bw, by, bx + bw, by + br);
+    ctx.lineTo(bx + bw, by + bh - br);
+    ctx.quadraticCurveTo(bx + bw, by + bh, bx + bw - br, by + bh);
+    ctx.lineTo(bx + br * 2.5, by + bh);
+    ctx.lineTo(bx + br * 0.5, by + bh + s * 0.14);
+    ctx.lineTo(bx + br * 1.2, by + bh);
+    ctx.lineTo(bx + br, by + bh);
+    ctx.quadraticCurveTo(bx, by + bh, bx, by + bh - br);
+    ctx.lineTo(bx, by + br);
+    ctx.quadraticCurveTo(bx, by, bx + br, by);
+    ctx.closePath();
+    ctx.globalAlpha = 0.22;
+    ctx.fill();
+    ctx.globalAlpha = 1;
+    ctx.stroke();
+
+    ctx.lineWidth = s * 0.055;
+    ctx.globalAlpha = 0.9;
+    const lx1 = bx + s * 0.12;
+    const ly1 = by + bh * 0.30;
+    const ly2 = by + bh * 0.58;
+    ctx.beginPath(); ctx.moveTo(lx1, ly1); ctx.lineTo(bx + bw - s * 0.18, ly1); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(lx1, ly2); ctx.lineTo(bx + bw * 0.60, ly2); ctx.stroke();
+    ctx.globalAlpha = 1;
+
+    const sx = p + w * 0.78, sy = p + h * 0.70;
+    const sr = s * 0.13;
+    ctx.lineWidth = s * 0.06;
+    ctx.beginPath();
+    ctx.moveTo(sx, sy - sr); ctx.lineTo(sx, sy + sr);
+    ctx.moveTo(sx - sr, sy); ctx.lineTo(sx + sr, sy);
+    ctx.moveTo(sx - sr*0.65, sy - sr*0.65); ctx.lineTo(sx + sr*0.65, sy + sr*0.65);
+    ctx.moveTo(sx + sr*0.65, sy - sr*0.65); ctx.lineTo(sx - sr*0.65, sy + sr*0.65);
+    ctx.stroke();
+  } else {
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(p, p + 2); ctx.lineTo(s - p, p + 2);
+    ctx.moveTo(p, s / 2);  ctx.lineTo(s - p - 2, s / 2);
+    ctx.moveTo(p, s - p - 2); ctx.lineTo(s - p - 3, s - p - 2);
+    ctx.stroke();
+  }
+}
+
+sizes.forEach(size => {
+  const canvas = document.getElementById("c");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d");
+  ctx.clearRect(0, 0, size, size);
+  drawIcon(ctx, size);
+  const link = document.createElement("a");
+  link.download = `icon${size}.png`;
+  link.href = canvas.toDataURL("image/png");
+  document.body.appendChild(link);
+  link.click();
+});
+</script>
+</body>
+</html>

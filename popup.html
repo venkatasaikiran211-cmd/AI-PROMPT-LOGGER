@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      /* liquid glass ambient background */
+      background:
+        radial-gradient(ellipse at 15% 15%, rgba(167,139,250,0.35) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 10%, rgba(96,165,250,0.28) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 90%, rgba(52,211,153,0.20) 0%, transparent 50%),
+        linear-gradient(150deg, #dde3f8 0%, #ede9ff 45%, #daf0f7 100%);
+    }
+
+    body {
+      width: 360px;
+      font-family: 'Inter', 'Segoe UI', sans-serif;
+      color: #1a1a2e;
+      font-size: 13px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      background: transparent;
+      /* top-left=10, top-right=0, bottom-right=10, bottom-left=10 */
+      border-radius: 10px 0 10px 10px;
+      overflow: hidden;
+    }
+
+    /* ── OUTER SHELL: liquid glass card ── */
+    .shell {
+      border-radius: 10px 0 10px 10px;
+      overflow: hidden;
+      background:
+        linear-gradient(160deg,
+          rgba(255,255,255,0.62) 0%,
+          rgba(237,233,255,0.42) 50%,
+          rgba(214,237,255,0.38) 100%);
+      backdrop-filter: blur(28px) saturate(1.8) brightness(1.05);
+      -webkit-backdrop-filter: blur(28px) saturate(1.8) brightness(1.05);
+      border: 1px solid rgba(167,139,250,0.28);
+      box-shadow:
+        0 8px 40px rgba(100,80,200,0.13),
+        0 2px 0 rgba(255,255,255,0.80) inset;
+    }
+
+    /* ── HEADER ── */
+    .header {
+      padding: 16px 16px 13px;
+      text-align: center;
+      background: linear-gradient(135deg,
+        rgba(255,255,255,0.75) 0%,
+        rgba(237,233,255,0.50) 100%);
+      border-bottom: 1px solid rgba(167,139,250,0.15);
+      position: relative;
+      overflow: hidden;
+    }
+    /* shimmer line across top of header */
+    .header::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg,
+        transparent 0%, rgba(255,255,255,0.9) 40%,
+        rgba(167,139,250,0.5) 70%, transparent 100%);
+    }
+    .header h1 {
+  font-size: 16px; font-weight: 800; letter-spacing: -0.3px;
+  background: linear-gradient(90deg, #7c3aed 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+    .header p { font-size: 11px; color: #7a7a9a; margin-top: 2px; }
+    .badge {
+      display: inline-block;
+      background: rgba(167,139,250,0.14);
+      border-radius: 20px;
+      padding: 2px 13px;
+      font-size: 11px; font-weight: 600;
+      margin-top: 7px;
+      color: #6d4fc2;
+      border: 1px solid rgba(167,139,250,0.30);
+      backdrop-filter: blur(8px);
+    }
+
+    /* ── TAB NAV ── */
+    .tab-nav {
+      display: flex;
+      background: rgba(255,255,255,0.40);
+      border-bottom: 1px solid rgba(167,139,250,0.13);
+      backdrop-filter: blur(10px);
+    }
+    .tab-btn {
+      flex: 1; padding: 8px 4px 7px;
+      background: none; border: none;
+      border-bottom: 2px solid transparent;
+      color: #9090b8;
+      font-size: 9px; font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      text-transform: uppercase; letter-spacing: 0.5px;
+      transition: color 0.2s, border-color 0.2s;
+      display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 5px;
+    }
+    .tab-btn svg { transition: stroke 0.2s, fill 0.2s; }
+    .tab-btn:hover { color: #4a4a7a; }
+    .tab-btn:hover svg { stroke: #4a4a7a; }
+    .tab-btn.active { color: #7c3aed; border-bottom-color: #a78bfa; }
+    .tab-btn.active svg { stroke: #7c3aed; }
+
+    /* ── TAB PAGES ── */
+    .tab-page { display: none; padding: 14px; }
+    .tab-page.active { display: block; }
+
+    /* ── SECTION TITLE ── */
+    .section-title {
+      font-size: 9.5px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1.3px;
+      color: #a0a0c0;
+      margin-bottom: 8px; margin-top: 14px;
+    }
+    .section-title:first-child { margin-top: 0; }
+
+    /* ── LIQUID GLASS CARD ── */
+    .glass {
+      background: linear-gradient(135deg,
+        rgba(255,255,255,0.72) 0%,
+        rgba(255,255,255,0.40) 100%);
+      border: 1px solid rgba(167,139,250,0.22);
+      outline: 1px solid rgba(255,255,255,0.70);
+      outline-offset: -1px;
+      box-shadow:
+        0 4px 20px rgba(100,80,200,0.08),
+        0 1.5px 0 rgba(255,255,255,0.95) inset;
+      backdrop-filter: blur(16px) saturate(1.6);
+      -webkit-backdrop-filter: blur(16px) saturate(1.6);
+      border-radius: 10px;
+      transition: background 0.2s, box-shadow 0.2s, border-color 0.2s;
+    }
+    .glass:hover {
+      background: linear-gradient(135deg,
+        rgba(255,255,255,0.88) 0%,
+        rgba(237,233,255,0.60) 100%);
+      border-color: rgba(167,139,250,0.38);
+      box-shadow: 0 6px 28px rgba(100,80,200,0.13), 0 1.5px 0 rgba(255,255,255,1) inset;
+    }
+
+    /* ── STAT ROW ── */
+    .stat-row { display: flex; gap: 8px; margin-bottom: 12px; }
+    .stat-card { flex: 1; padding: 13px 10px; text-align: center; }
+    .stat-card .num {
+      font-size: 28px; font-weight: 800;
+      background: linear-gradient(135deg, #1a1a2e 30%, #a78bfa);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      letter-spacing: -1.5px; line-height: 1;
+    }
+    .stat-card .label {
+      font-size: 9.5px; font-weight: 600;
+      color: #a0a0c0;
+      margin-top: 5px; text-transform: uppercase; letter-spacing: 0.8px;
+    }
+
+    /* ── PLATFORM CARD ── */
+    .platform-card { padding: 11px 13px; margin-bottom: 8px; cursor: pointer; }
+    .platform-top { display: flex; align-items: center; justify-content: space-between; }
+    .platform-left { display: flex; align-items: center; gap: 10px; }
+    .platform-icon {
+      width: 34px; height: 34px; border-radius: 9px;
+      background: rgba(255,255,255,0.70);
+      border: 1px solid rgba(167,139,250,0.18);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(100,80,200,0.08);
+    }
+    .platform-icon svg { display: block; }
+    .platform-name { font-size: 13px; font-weight: 700; color: #1a1a2e; }
+    .platform-host { font-size: 10px; color: #a0a0c0; margin-top: 1px; }
+    .platform-count {
+      font-size: 10px; font-weight: 700; padding: 3px 10px;
+      border-radius: 20px;
+      background: rgba(167,139,250,0.13);
+      color: #7c5cbf;
+      border: 1px solid rgba(167,139,250,0.28);
+    }
+    .progress-bg {
+      background: rgba(167,139,250,0.12);
+      border-radius: 4px; height: 3px; margin-top: 9px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 3px; border-radius: 4px;
+      background: linear-gradient(90deg, #a78bfa, #60a5fa);
+    }
+    .platform-footer { font-size: 10px; color: #b0b0cc; margin-top: 5px; text-align: right; }
+
+    /* ── HISTORY CHAT CARD ── */
+    .chat-card {
+      padding: 10px 12px; margin-bottom: 8px;
+      overflow: hidden; width: 100%;
+    }
+    .chat-card-top {
+      display: flex; align-items: center;
+      justify-content: space-between; margin-bottom: 8px;
+    }
+    .chat-card-left { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; overflow: hidden; }
+    .chat-card-icon {
+      width: 28px; height: 28px; border-radius: 7px;
+      background: rgba(96,165,250,0.12);
+      border: 1px solid rgba(96,165,250,0.22);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; flex-shrink: 0;
+    }
+    .chat-card-info { min-width: 0; flex: 1; overflow: hidden; }
+    .chat-card-title {
+      font-size: 12px; font-weight: 700; color: #1a1a2e;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .chat-card-meta { font-size: 10px; color: #a0a0c0; margin-top: 1px; }
+    .chat-card-count {
+      font-size: 10px; font-weight: 700; padding: 2px 8px;
+      border-radius: 20px;
+      background: rgba(52,211,153,0.12);
+      color: #1a9e6e;
+      border: 1px solid rgba(52,211,153,0.25);
+      flex-shrink: 0; margin-left: 6px;
+    }
+    .chat-dl-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+      width: 100%; overflow: hidden;
+    }
+    .chat-dl-btn {
+      padding: 6px 4px; border-radius: 7px;
+      font-size: 10px; font-weight: 600;
+      font-family: 'Inter', sans-serif; cursor: pointer;
+      background: rgba(255,255,255,0.55);
+      border: 1px solid rgba(167,139,250,0.20);
+      color: #5a5a8a;
+      transition: background 0.2s; text-align: center;
+      backdrop-filter: blur(8px);
+      overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+      min-width: 0;
+      position: relative;
+    }
+    .chat-dl-btn:hover {
+      background: rgba(167,139,250,0.12); color: #1a1a2e;
+      overflow: visible; white-space: normal;
+      z-index: 10;
+      word-break: break-all;
+    }
+
+    .chat-del-btn {
+      width: 26px; height: 26px; border-radius: 7px;
+      background: rgba(239,68,68,0.08);
+      border: 1px solid rgba(239,68,68,0.18);
+      color: #e05555;
+      font-size: 12px; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .chat-del-btn:hover { background: rgba(239,68,68,0.18); border-color: rgba(239,68,68,0.35); }
+
+    /* ── PLATFORM GROUP LABEL ── */
+    .platform-group-label {
+      display: flex; align-items: center; gap: 8px;
+      margin-bottom: 8px; margin-top: 6px;
+    }
+    .platform-group-icon {
+      width: 22px; height: 22px; border-radius: 5px;
+      background: rgba(255,255,255,0.70);
+      border: 1px solid rgba(167,139,250,0.18);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .platform-group-icon svg { display: block; width: 13px; height: 13px; }
+    .platform-group-name {
+      font-size: 11px; font-weight: 700;
+      color: #9090b8; text-transform: uppercase; letter-spacing: 0.6px;
+    }
+
+    /* ── DOWNLOAD BLOCK ── */
+    .pdl-block { padding: 11px 13px; margin-bottom: 8px; }
+    .pdl-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .pdl-icon {
+      width: 26px; height: 26px; border-radius: 6px;
+      background: rgba(255,255,255,0.70);
+      border: 1px solid rgba(167,139,250,0.18);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      box-shadow: 0 2px 6px rgba(100,80,200,0.07);
+    }
+    .pdl-icon svg { display: block; width: 14px; height: 14px; }
+    .pdl-name { font-size: 13px; font-weight: 700; color: #1a1a2e; }
+    .pdl-row { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px; }
+    .pdl-row-label {
+      font-size: 9.5px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.7px;
+      color: #a0a0c0; margin-bottom: 5px;
+    }
+    .pdl-btn {
+      padding: 7px 4px; border-radius: 7px;
+      font-size: 10px; font-weight: 600;
+      font-family: 'Inter', sans-serif; cursor: pointer;
+      background: rgba(255,255,255,0.55);
+      border: 1px solid rgba(167,139,250,0.20);
+      color: #5a5a8a;
+      transition: background 0.2s; text-align: center;
+      backdrop-filter: blur(8px);
+    }
+    .pdl-btn:hover { background: rgba(167,139,250,0.12); color: #1a1a2e; }
+    .pdl-divider { border: none; border-top: 1px solid rgba(167,139,250,0.12); margin: 8px 0; }
+
+    /* ── BUTTONS ── */
+    .btn {
+      width: 100%; padding: 10px; border-radius: 9px;
+      font-size: 12.5px; font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer; margin-bottom: 8px;
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    .btn-default {
+      background: rgba(255,255,255,0.60);
+      border: 1px solid rgba(167,139,250,0.22);
+      color: #1a1a2e;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 2px 10px rgba(100,80,200,0.07), 0 1px 0 rgba(255,255,255,0.9) inset;
+    }
+    .btn-default:hover {
+      background: rgba(167,139,250,0.13);
+      border-color: rgba(167,139,250,0.35);
+      box-shadow: 0 4px 16px rgba(100,80,200,0.12), 0 1px 0 rgba(255,255,255,1) inset;
+    }
+    .btn-clear {
+      background: rgba(239,68,68,0.07);
+      border: 1px solid rgba(239,68,68,0.18);
+      color: #c0404a;
+      backdrop-filter: blur(8px);
+    }
+    .btn-clear:hover { background: rgba(239,68,68,0.13); }
+
+    /* ── SETTINGS INFO BOX ── */
+    .info-box { padding: 12px 14px; font-size: 11.5px; color: #5a5a8a; line-height: 2; }
+    .info-box span { font-size: 10px; color: #a0a0c0; }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(80,60,160,0.18);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 100; align-items: center; justify-content: center;
+      animation: fadeIn 0.18s ease;
+    }
+    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: linear-gradient(135deg,
+        rgba(255,255,255,0.80) 0%,
+        rgba(237,233,255,0.65) 100%);
+      border: 1px solid rgba(255,255,255,0.82);
+      backdrop-filter: blur(28px) saturate(1.8);
+      -webkit-backdrop-filter: blur(28px) saturate(1.8);
+      border-radius: 16px; width: 326px; max-height: 440px;
+      display: flex; flex-direction: column; overflow: hidden;
+      box-shadow: 0 20px 60px rgba(80,60,160,0.18), 0 1.5px 0 rgba(255,255,255,0.9) inset;
+      animation: slideUp 0.22s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    @keyframes slideUp {
+      from { opacity:0; transform: translateY(14px) scale(0.97); }
+      to   { opacity:1; transform: translateY(0) scale(1); }
+    }
+    .modal-header {
+      padding: 13px 15px; display: flex; align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(167,139,250,0.15);
+      background: rgba(255,255,255,0.50);
+    }
+    .modal-header span { font-size: 13px; font-weight: 800; color: #1a1a2e; }
+    .modal-close {
+      background: rgba(167,139,250,0.12);
+      border: 1px solid rgba(167,139,250,0.22);
+      color: #7c5cbf; font-size: 11px; cursor: pointer;
+      width: 24px; height: 24px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, color 0.2s;
+    }
+    .modal-close:hover { background: rgba(167,139,250,0.22); color: #1a1a2e; }
+    .modal-body { overflow-y: auto; padding: 10px 12px; flex: 1; }
+
+    .prompt-item {
+      background: rgba(255,255,255,0.60);
+      border: 1px solid rgba(167,139,250,0.15);
+      border-radius: 10px; padding: 10px 12px; margin-bottom: 8px;
+      transition: background 0.15s;
+      backdrop-filter: blur(8px);
+    }
+    .prompt-item:hover { background: rgba(237,233,255,0.70); }
+    .prompt-index {
+      font-size: 9px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 1px;
+      color: #7c5cbf; margin-bottom: 3px;
+    }
+    .prompt-time { font-size: 10px; font-weight: 500; color: #a0a0c0; margin-bottom: 5px; }
+    .prompt-text {
+      font-size: 12.5px; font-weight: 400;
+      color: #1a1a2e; line-height: 1.65; word-break: break-word;
+    }
+
+    .empty-state {
+      font-size: 12px; color: #b0b0cc;
+      text-align: center; padding: 22px 0; line-height: 1.8;
+    }
+
+    .footer {
+      text-align: center; font-size: 10px;
+      color: #b0b0cc; padding: 8px 16px 12px;
+      background: rgba(255,255,255,0.25);
+      border-top: 1px solid rgba(167,139,250,0.10);
+    }
+
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(167,139,250,0.25); border-radius: 4px; }
+  </style>
+</head>
+<body>
+<div class="shell">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>AI Prompt Logger</h1>
+    <p>Captures &amp; saves your prompts across AI tools</p>
+    <div class="badge" id="badge">Loading...</div>
+  </div>
+
+  <!-- TAB NAV -->
+  <div class="tab-nav">
+    <button class="tab-btn active" data-tab="live">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9090b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/>
+      </svg>
+      Live
+    </button>
+    <button class="tab-btn" data-tab="history">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9090b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 3h6l2 3H21a1 1 0 0 1 1 1v11a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"/>
+      </svg>
+      History
+    </button>
+    <button class="tab-btn" data-tab="download">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9090b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      Download
+    </button>
+    <button class="tab-btn" data-tab="settings">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9090b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg>
+      Settings
+    </button>
+  </div>
+
+  <!-- TAB: LIVE -->
+  <div class="tab-page active" id="tab-live">
+    <div class="section-title">Overall Stats</div>
+    <div class="stat-row">
+      <div class="stat-card glass">
+        <div class="num" id="totalCount">0</div>
+        <div class="label">Total Prompts</div>
+      </div>
+      <div class="stat-card glass">
+        <div class="num" id="siteCount">0</div>
+        <div class="label">AI Sites Used</div>
+      </div>
+    </div>
+    <div class="section-title">Platform Monitor</div>
+    <div id="platformList"></div>
+  </div>
+
+  <!-- TAB: HISTORY -->
+  <div class="tab-page" id="tab-history">
+    <div style="display:flex;gap:8px;margin-bottom:6px;">
+      <button class="btn btn-default" id="scanHistory" style="margin-bottom:0;">&#128269; Scan Current Chat</button>
+      <button class="btn btn-default" id="refreshHistory" style="margin-bottom:0;width:auto;padding:10px 14px;">&#8635;</button>
+    </div>
+    <div id="scanStatus" style="font-size:10.5px;color:#a0a0c0;text-align:center;margin-bottom:10px;"></div>
+    <div id="historyList"></div>
+  </div>
+
+  <!-- TAB: DOWNLOAD -->
+  <div class="tab-page" id="tab-download">
+    <div class="section-title">By Platform</div>
+    <div id="perPlatformDownload"></div>
+    <div class="section-title">All Platforms</div>
+    <button class="btn btn-default" id="downloadTxt">&#11015; All Platforms .TXT</button>
+    <button class="btn btn-default" id="downloadJson">&#11015; All Platforms .JSON</button>
+  </div>
+
+  <!-- TAB: SETTINGS -->
+  <div class="tab-page" id="tab-settings">
+    <div class="section-title">Danger Zone</div>
+    <button class="btn btn-clear" id="clearLive">&#128465; Clear All Live Prompts</button>
+    <button class="btn btn-clear" id="clearHistory">&#128465; Clear All History</button>
+    <button class="btn btn-clear" id="clearAll">&#128465; Clear Everything</button>
+    <div class="section-title">Supported Platforms</div>
+    <div class="glass info-box">
+      &#9679; ChatGPT &nbsp; &#9679; Claude &nbsp; &#9679; Gemini<br>
+      &#9679; DeepSeek &nbsp; &#9679; AI Studio<br>
+      <span>Prompts stored locally on your device only.</span>
+    </div>
+  </div>
+
+  <div class="footer">AI Prompt Logger &mdash; Local Storage Only</div>
+
+</div><!-- /.shell -->
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-header">
+      <span id="modalTitle">Prompts</span>
+      <button class="modal-close" id="modalClose">&#10005;</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<script src="popup.js"></script>
+</body>
+</html>
